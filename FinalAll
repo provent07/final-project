@@ -1,0 +1,437 @@
+from visual import * #import from VPython
+from visual.graph import * #import function of VPython
+
+graphlist=[] #list of options pick by user
+while True:
+    query=int(input("1.GPE graph \n2.Velocity comparison to Earth graph \n3.Velocity vs Time graph \n4.Exit \nChoice:")) #options of graph
+    if query==1:
+        graph=int(input("0.All \n1.Mercury \n2.Venus \n3.Earth \n4.Mars \n5.Jupiter \n6.Saturn \n7.Uranus \n8.Neptune \n9.Exit \nChoice:")) #options of planets
+        if graph==9:
+                    break
+        elif graph in range(0,9):
+                    graphlist.append(graph)
+        else:
+                    print("Please input the number given only")
+    elif query==2:
+        velocitygraph=int(input("9.Exit \n10.All \n11.Mercury \n12.Venus \n13.Earth \n14.Mars \n15.Jupiter \n16.Saturn \n17.Uranus \n18.Neptune \nChoice:"))
+        if velocitygraph==9:
+                    break
+        elif velocitygraph in range(10,19):
+                    graphlist.append(velocitygraph)
+        else:
+                    print("Please input the number given only")
+    elif query==3:
+        velocitytime=int(input("9.Exit \n19.All \n20.Mercury \n21.Venus \n22.Earth \n23.Mars \n24.Jupiter \n25.Saturn \n26.Uranus \n27.NeptuneChoice:"))
+        if velocitytime==9:
+                    break
+        elif velocitytime in range(19,28):
+                    graphlist.append(velocitytime)
+        else:
+                    print("Please input the number given only")
+    elif query==4:
+        break
+    else:
+                print("Please input the number given only")
+
+scene = display(title='Solar System', width=800,height=700, range=(25000, 25000, 25000), center=vector(1000, 0, 0)) #window for the solar system program
+scene.autoscale = True
+
+sun = sphere(pos=vector(0, 0, 0), radius=100, color=color.yellow,material=materials.emissive, mass=10) #create the spherical objects representing the planets/sun
+
+mercury=sphere(pos=vector(200, 0, 0), radius=50,material=materials.wood, color=color.red)
+mercury.trail=curve(color=mercury.color) #create trail
+mercury.velocity=vector(0,0,295) #initial velocity of planet
+mercurylabel = label(pos=vector(200, 0, 0),text='MERCURY', xoffset=20,yoffset=140,height=10, border=6,font='sans',color=color.red) #create label
+
+venus = sphere(pos=vector(373.664, 0, 0), radius=50,material=materials.wood, color=color.orange)
+venus.trail = curve(color=venus.color)
+venus.velocity = vector(0, 0, 225)
+venuslabel = label(pos=vector(373.664, 0, 0),text='VENUS', xoffset=20,yoffset=100,height=10, border=6,font='sans',color=color.orange)
+
+earth=sphere(pos=vector(516.664, 0, 0), radius=50,material=materials.earth, mass=2)
+earth.trail=curve(color=color.yellow)
+earth.velocity=vector(0,0,195)
+earthlabel = label(pos=vector(516.664, 0, 0),text='EARTH', xoffset=20,yoffset=60,height=10, border=6,font='sans',color=color.yellow)
+
+mars = sphere(pos=vector(787.222, 0, 0), radius=50,material=materials.wood, color=color.green)
+mars.trail = curve(color=mars.color)  
+mars.velocity = vector(0, 0, 155)
+marslabel = label(pos=vector(787.222, 0, 0),text='MARS', xoffset=20,yoffset=20,height=10, border=6,font='sans',color=color.green)
+
+jupiter = sphere(pos=vector(2688.068, 0, 0), radius=75,material=materials.marble, color=color.cyan)
+jupiter.trail = curve(color=jupiter.color) 
+jupiter.velocity = vector(0, 0, 70)
+jupiterlabel = label(pos=vector(2688.068, 0, 0),text='JUPITER', xoffset=20,yoffset=20,height=10, border=6,font='sans',color=color.cyan)
+
+saturn = sphere(pos=vector(4920.048, 0, 0), radius=75,material=materials.marble, color=color.blue)
+saturn.trail = curve(color=saturn.color) 
+saturn.velocity = vector(0, 0, 50)
+saturnlabel = label(pos=vector(4920.048, 0, 0),text='SATURN', xoffset=20,yoffset=20,height=10, border=6,font='sans',color=color.blue)
+
+uranus = sphere(pos=vector(9924.19, 0, 0), radius=75,material=materials.wood, color=color.magenta)
+uranus.trail = curve(color=uranus.color)  
+uranus.velocity = vector(0, 0, 30)
+uranuslabel = label(pos=vector(9924.19, 0, 0),text='URANUS', xoffset=20,yoffset=20,height=10, border=6,font='sans',color=color.magenta)
+
+neptune = sphere(pos=vector(15544.811, 0, 0), radius=75,material=materials.wood, color=color.white)
+neptune.trail = curve(color=neptune.color)  
+neptune.velocity = vector(0, 0, 23)
+neptunelabel = label(pos=vector(15544.811, 0, 0),text='NEPTUNE', xoffset=20,yoffset=20,height=10, border=6,font='sans',color=color.white)
+
+G = -6.67 * 10 ** (-4)
+
+# scale=1.0*math.pow(10,20). It will be very slow if very large numbers are used6
+m_sun = 2.0 * 10 ** 10
+m_mercury = 3.29 * 10 ** 3
+m_venus = 4.87 * 10 ** 4
+m_earth = 6.0 * 10 ** 4
+m_moon = 7.35 * 10 ** 2
+m_mars = 6.39 * 10 ** 3
+m_jupiter = 1.90 * 10 ** 7
+m_saturn = 5.68 * 10 ** 6
+m_uranus = 8.68 * 10 ** 5
+m_neptune = 1.02 * 10 ** 6
+
+#RealRatio are ratio of each planet's speed compared to Earth. It is taken from https://nssdc.gsfc.nasa.gov/planetary/factsheet/planet_table_ratio.html
+
+mercury_RealRatio = 1.590
+venus_RealRatio = 1.180
+earth_RealRatio = 1.000
+mars_RealRatio = 0.808
+jupiter_RealRatio = 0.439
+saturn_RealRatio = 0.325
+uranus_RealRatio = 0.228
+neptune_RealRatio = 0.182
+
+#Radius, position, gravitational constant and mass are hampered as there are limits to how big the python can run.
+#If radius scale is used I am afraid that mercury and mars would be hard to see when compared to sun
+
+t = 0 #initial time
+deltat = .01 #change in time(delta time)
+time_interval = 0.05 #time intervals for plotting on graphs
+time_interval_int = int(time_interval / deltat) #adjusting time intervals based on deltat
+
+for i in graphlist:
+    if i in range(0,9):
+        #create GPE vs position of planets graph
+        graphGPE = gdisplay(x=800, y=600, xtitle='Position', ytitle="Gravitational Potential Energy", width=800, height=700,title='GPE vs Position of Planet to Sun')
+
+        mercuryGPE = gcurve(gdisplay=graphGPE, color=color.red) #create line in graph GPE vs position of planets
+        venusGPE = gcurve(gdisplay=graphGPE, color=color.orange)
+        earthGPE = gcurve(gdisplay=graphGPE, color=color.yellow)
+        marsGPE = gcurve(gdisplay=graphGPE, color=color.green)
+        jupiterGPE = gcurve(gdisplay=graphGPE, color=color.cyan)
+        saturnGPE = gcurve(gdisplay=graphGPE, color=color.blue)
+        uranusGPE = gcurve(gdisplay=graphGPE, color=color.magenta)
+        neptuneGPE = gcurve(gdisplay=graphGPE, color=color.white)
+
+    elif i in range(10,19):
+        #create speed ratios of planet to Earth's vs time
+        graphSpeedRatios = gdisplay(x=600, y=500, xtitle='Time', ytitle='Speed Ratio', width=800, height=700,title='Planet Speed Ratios to Earth vs Time')
+        
+        mercuryRatio = gcurve(gdisplay=graphSpeedRatios, color=color.red, label='Mercury') #create line in graph speed ratios to earth vs time
+        mercuryRealRatio = gdots(gdisplay=graphSpeedRatios, color=color.red) #create line of average of speed ratios to earth vs time
+
+        venusRatio = gcurve(gdisplay=graphSpeedRatios, color=color.orange, label='Venus')
+        venusRealRatio = gdots(gdisplay=graphSpeedRatios, color=color.orange)
+
+        earthRatio = gcurve(gdisplay=graphSpeedRatios, color=color.yellow, label='Earth')
+        earthRealRatio = gdots(gdisplay=graphSpeedRatios, color=color.yellow)
+
+        marsRatio = gcurve(gdisplay=graphSpeedRatios, color=color.green, label='Mars')
+        marsRealRatio = gdots(gdisplay=graphSpeedRatios, color=color.green)
+
+        jupiterRatio = gcurve(gdisplay=graphSpeedRatios, color=color.cyan, label='Jupiter')
+        jupiterRealRatio = gdots(gdisplay=graphSpeedRatios, color=color.cyan)
+
+        saturnRatio = gcurve(gdisplay=graphSpeedRatios, color=color.blue, label='Saturn')
+        saturnRealRatio = gdots(gdisplay=graphSpeedRatios, color=color.blue)
+
+        uranusRatio = gcurve(gdisplay=graphSpeedRatios, color=color.magenta, label='Uranus')
+        uranusRealRatio = gdots(gdisplay=graphSpeedRatios, color=color.magenta)
+
+        neptuneRatio = gcurve(gdisplay=graphSpeedRatios, color=color.white, label='Neptune')
+        neptuneRealRatio = gdots(gdisplay=graphSpeedRatios, color=color.white)
+    elif i in range(19,28):
+        #create velocity vs time graph
+        graphv = gdisplay(x=600, y=500, xtitle='Time', ytitle='Velocity', width=800, height=700, foreground=color.black,background=color.white, title="Velocity vs Time of Earth")
+
+        mercuryvelocity = gcurve(gdisplay=graphv, color=color.red) #create line in graph velocity vs time
+        venusvelocity = gcurve(gdisplay=graphv, color=color.orange)
+        earthvelocity = gcurve(gdisplay=graphv, color=color.yellow)
+        marsvelocity = gcurve(gdisplay=graphv, color=color.green)
+        jupitervelocity = gcurve(gdisplay=graphv, color=color.cyan)
+        saturnvelocity = gcurve(gdisplay=graphv, color=color.blue)
+        uranusvelocity = gcurve(gdisplay=graphv, color=color.magenta)
+        neptunevelocity = gcurve(gdisplay=graphv, color=color.white)
+
+#create position vs time graph of the Earth
+graphpos = gdisplay(x=600, y=0, xtitle='Time', ytitle='Position', width=800, height=700,title='Position vs Time of Earth')
+earthposx = gcurve(gdisplay=graphpos, color=color.blue) #making the curve on graph
+
+class formula: #to store all formulas used for calculations
+    def __init__ (self):
+        pass
+
+    def Fgrav(self,pos1,distance,m):
+        UnitVector=(pos1-sun.pos)/distance
+        Fgrav = (G * m_sun * m * UnitVector)/distance ** 2
+        return Fgrav
+    
+    def VelUpd(self,velocity,Fgrav,m):
+        velocity = velocity + (Fgrav / m) * deltat
+        return velocity
+        
+    def PosUpd(self,pos1,velocity):
+        pos1 = pos1 + velocity * deltat
+        return pos1
+
+    def Ratio(self,velocity):
+        Ratio=mag(velocity)/mag(earth.velocity)
+        return Ratio
+
+    def GPE(self,m,distance):
+        GPE=(G*m_sun*m)/distance
+        return GPE
+
+if graphlist==[]:
+    exit()
+
+while graphlist !=[]:
+    rate(100000) #max time for app to shut down
+    Formula=formula()
+
+    mercury.trail.append(pos=mercury.pos) #put trail on th position of planet
+    distanceMercury = mag(mercury.pos) #changing vector as a distance from centre point which is the sun
+    FgravMercury=Formula.Fgrav(mercury.pos,distanceMercury,m_mercury) #finding gravitational force with accordance of the sun
+    mercury.velocity=Formula.VelUpd(mercury.velocity,FgravMercury,m_mercury) #update in velocity with gravitational force taking effect
+    mercury.pos = Formula.PosUpd(mercury.pos,mercury.velocity) #update in position with regards to velocity
+    mercury.rotate(angle=radians(10), axis=(0, 1, 0)) #it may not be seen but each planet rotate around its axis
+    mercury_GPE=Formula.GPE(m_mercury,distanceMercury) #calculate gravitational potential energy with accordance to sun for graph
+    if distanceMercury <= sun.radius: #just for in case if somehow planet crash to sun
+        break
+    mercury_Ratio=Formula.Ratio(mercury.velocity) #calculation of ratio of speed of planet to earth for graph
+
+    venus.trail.append(pos=venus.pos)
+    distanceVenus = mag(venus.pos)
+    FgravVenus=Formula.Fgrav(venus.pos,distanceVenus,m_venus)
+    venus.velocity=Formula.VelUpd(venus.velocity,FgravVenus,m_venus)
+    venus.pos = Formula.PosUpd(venus.pos,venus.velocity)
+    venus.rotate(angle=radians(20), axis=(0, 1, 0))
+    venus_GPE=Formula.GPE(m_venus,distanceVenus)
+    if distanceVenus <= sun.radius:
+        break
+    venus_Ratio=Formula.Ratio(venus.velocity)
+
+    earth.trail.append(pos=earth.pos)
+    distanceEarth = mag(earth.pos)
+    FgravEarth=Formula.Fgrav(earth.pos,distanceEarth,m_earth)
+    earth.velocity=Formula.VelUpd(earth.velocity,FgravEarth,m_earth)
+    earth.pos = Formula.PosUpd(earth.pos,earth.velocity)
+    earth.rotate(angle=radians(30), axis=(0, 1, 0))
+    earth_GPE=Formula.GPE(m_earth,distanceEarth)
+    if distanceEarth <= sun.radius:
+        break
+    earth_Ratio=Formula.Ratio(earth.velocity)
+
+    mars.trail.append(pos=mars.pos)
+    distanceMars = mag(mars.pos)
+    FgravMars=Formula.Fgrav(mars.pos,distanceMars,m_mars)
+    mars.velocity=Formula.VelUpd(mars.velocity,FgravMars,m_mars)
+    mars.pos = Formula.PosUpd(mars.pos,mars.velocity)
+    mars.rotate(angle=radians(15), axis=(0, 1, 0))
+    mars_GPE=Formula.GPE(m_mars,distanceMars)
+    if distanceMars <= sun.radius:
+        break
+    mars_Ratio=Formula.Ratio(mars.velocity)
+
+    jupiter.trail.append(pos=jupiter.pos)
+    distanceJupiter = mag(jupiter.pos)
+    FgravJupiter=Formula.Fgrav(jupiter.pos,distanceJupiter,m_jupiter)
+    jupiter.velocity=Formula.VelUpd(jupiter.velocity,FgravJupiter,m_jupiter)
+    jupiter.pos = Formula.PosUpd(jupiter.pos,jupiter.velocity)
+    jupiter.rotate(angle=radians(15), axis=(0, 1, 0))
+    jupiter_GPE=Formula.GPE(m_jupiter,distanceJupiter)
+    if distanceJupiter <= sun.radius:
+        break
+    jupiter_Ratio=Formula.Ratio(jupiter.velocity)
+
+    saturn.trail.append(pos=saturn.pos)
+    distanceSaturn = mag(saturn.pos)
+    FgravSaturn=Formula.Fgrav(saturn.pos,distanceSaturn,m_saturn)
+    saturn.velocity=Formula.VelUpd(saturn.velocity,FgravSaturn,m_saturn)
+    saturn.pos = Formula.PosUpd(saturn.pos,saturn.velocity)
+    saturn.rotate(angle=radians(15), axis=(0, 1, 0))
+    saturn_GPE=Formula.GPE(m_saturn,distanceSaturn)
+    if distanceSaturn <= sun.radius:
+        break
+    saturn_Ratio = Formula.Ratio(saturn.velocity)
+
+    uranus.trail.append(pos=uranus.pos)
+    distanceUranus = mag(uranus.pos)
+    FgravUranus=Formula.Fgrav(uranus.pos,distanceUranus,m_uranus)
+    uranus.velocity=Formula.VelUpd(uranus.velocity,FgravUranus,m_uranus)
+    uranus.pos = Formula.PosUpd(uranus.pos,uranus.velocity)
+    uranus.rotate(angle=radians(15), axis=(0, 1, 0))
+    uranus_GPE=Formula.GPE(m_uranus,distanceUranus)
+    if distanceUranus <= sun.radius:
+        break
+    uranus_Ratio=Formula.Ratio(uranus.velocity)
+    
+    neptune.trail.append(pos=neptune.pos)
+    distanceNeptune = mag(neptune.pos)
+    FgravNeptune=Formula.Fgrav(neptune.pos,distanceNeptune,m_neptune)
+    neptune.velocity=Formula.VelUpd(neptune.velocity,FgravNeptune,m_neptune)
+    neptune.pos = Formula.PosUpd(neptune.pos,neptune.velocity)
+    neptune.rotate(angle=radians(15), axis=(0, 1, 0))
+    neptune_GPE=Formula.GPE(m_neptune,distanceNeptune)
+    if distanceNeptune <= sun.radius:
+        break
+    neptune_Ratio=Formula.Ratio(neptune.velocity)
+
+    earthposx.plot(pos=(t,earth.pos.x)) #plot graph of position of Earth vs Time of Earth
+    t += deltat #update time in accordance to the change of time designated
+
+    mercury1=False #variables that later will be filled with graph plotting function
+    mercury2=False
+    mercury3=False
+    mercury4=False
+
+    venus1=False
+    venus2=False
+    venus3=False
+    venus4=False
+
+    earth1=False
+    earth2=False
+    earth3=False
+    earth4=False
+
+    mars1=False
+    mars2=False
+    mars3=False
+    mars4=False
+
+    jupiter1=False
+    jupiter2=False
+    jupiter3=False
+    jupiter4=False
+
+    saturn1=False
+    saturn2=False
+    saturn3=False
+    saturn4=False
+
+    uranus1=False
+    uranus2=False
+    uranus3=False
+    uranus4=False
+
+    neptune1=False
+    neptune2=False
+    neptune3=False
+    neptune4=False
+    
+    for i in graphlist: #calling on users choice as to which graph will be presented
+        if i==0:
+            mercury1=mercuryGPE.plot(pos=(mercury.pos.x,mercury_GPE)) #graph plotting function
+            venus1=venusGPE.plot(pos=(venus.pos.x,venus_GPE))
+            earth1=earthGPE.plot(pos=(earth.pos.x,earth_GPE))
+            mars1=marsGPE.plot(pos=(mars.pos.x,mars_GPE))
+            jupiter1=jupiterGPE.plot(pos=(jupiter.pos.x,jupiter_GPE))
+            saturn1=saturnGPE.plot(pos=(saturn.pos.x,saturn_GPE))
+            uranus1=uranusGPE.plot(pos=(uranus.pos.x,uranus_GPE))
+            neptune1=neptuneGPE.plot(pos=(neptune.pos.x,neptune_GPE))
+        elif i==1:
+            mercury1=mercuryGPE.plot(pos=(mercury.pos.x,mercury_GPE))
+        elif i==2:
+            venus1=venusGPE.plot(pos=(venus.pos.x,venus_GPE))
+        elif i==3:
+            earth1=earthGPE.plot(pos=(earth.pos.x,earth_GPE))
+        elif i==4:
+            mars1=marsGPE.plot(pos=(mars.pos.x,mars_GPE))
+        elif i==5:
+            jupiter1=jupiterGPE.plot(pos=(jupiter.pos.x,jupiter_GPE))
+        elif i==6:
+            saturn1=saturnGPE.plot(pos=(saturn.pos.x,saturn_GPE))
+        elif i==7:
+            uranus1=uranusGPE.plot(pos=(uranus.pos.x,uranus_GPE))
+        elif i==8:
+            neptune1=neptuneGPE.plot(pos=(neptune.pos.x,neptune_GPE))
+        elif i==10:
+            mercury2=mercuryRatio.plot(pos=(t,mercury_Ratio))
+            mercury4=mercuryRealRatio.plot(pos=(t,mercury_RealRatio))
+            
+            venus2=venusRatio.plot(pos=(t,venus_Ratio))
+            venus4=venusRealRatio.plot(pos=(t,venus_RealRatio))
+            
+            earth2=earthRatio.plot(pos=(t,earth_Ratio))
+            earth4=earthRealRatio.plot(pos=(t,earth_RealRatio))
+            
+            mars2=marsRatio.plot(pos=(t,mars_Ratio))
+            mars4=marsRealRatio.plot(pos=(t,mars_RealRatio))
+            
+            jupiter2=jupiterRatio.plot(pos=(t,jupiter_Ratio))
+            jupiter4=jupiterRealRatio.plot(pos=(t,jupiter_RealRatio))
+            
+            saturn2=saturnRatio.plot(pos=(t,saturn_Ratio))
+            saturn4=saturnRealRatio.plot(pos=(t,saturn_RealRatio))
+            
+            uranus2=uranusRatio.plot(pos=(t,uranus_Ratio))
+            uranus4=uranusRealRatio.plot(pos=(t,uranus_RealRatio))
+            
+            neptune2=neptuneRatio.plot(pos=(t,neptune_Ratio))
+            neptune4=neptuneRealRatio.plot(pos=(t,neptune_RealRatio))
+        elif i==11:
+            mercury2=mercuryRatio.plot(pos=(t,mercury_Ratio))
+            mercury4=mercuryRealRatio.plot(pos=(t,mercury_RealRatio))
+        elif i==12:
+            venus2=venusRatio.plot(pos=(t,venus_Ratio))
+            venus4=venusRealRatio.plot(pos=(t,venus_RealRatio))
+        elif i==13:
+            earth2=earthRatio.plot(pos=(t,earth_Ratio))
+            earth4=earthRealRatio.plot(pos=(t,earth_RealRatio))
+        elif i==14:
+            mars2=marsRatio.plot(pos=(t,mars_Ratio))
+            mars4=marsRealRatio.plot(pos=(t,mars_RealRatio))
+        elif i==15:
+            jupiter2=jupiterRatio.plot(pos=(t,jupiter_Ratio))
+            jupiter4=jupiterRealRatio.plot(pos=(t,jupiter_RealRatio))
+        elif i==16:
+            saturn2=saturnRatio.plot(pos=(t,saturn_Ratio))
+            saturn4=saturnRealRatio.plot(pos=(t,saturn_RealRatio))
+        elif i==17:
+            uranus2=uranusRatio.plot(pos=(t,uranus_Ratio))
+            uranus4=uranusRealRatio.plot(pos=(t,uranus_RealRatio))
+        elif i==18:
+            neptune2=neptuneRatio.plot(pos=(t,neptune_Ratio))
+            neptune4=neptuneRealRatio.plot(pos=(t,neptune_RealRatio))
+        elif i==19:
+            mercury3=mercuryvelocity.plot(pos=(t,mercury.velocity.x))
+            venus3=venusvelocity.plot(pos=(t,venus.velocity.x))
+            earth3=earthvelocity.plot(pos=(t,earth.velocity.x))
+            mars3=marsvelocity.plot(pos=(t,mars.velocity.x))
+            jupiter3=jupitervelocity.plot(pos=(t,jupiter.velocity.x))
+            saturn3=saturnvelocity.plot(pos=(t,saturn.velocity.x))
+            uranus3=uranusvelocity.plot(pos=(t,uranus.velocity.x))
+            neptune3=neptunevelocity.plot(pos=(t,neptune.velocity.x))
+        elif i==20:
+            mercury3=mercuryvelocity.plot(pos=(t,mercury.velocity.x))
+        elif i==21:
+            venus3=venusvelocity.plot(pos=(t,venus.velocity.x))
+        elif i==22:
+            earth3=earthvelocity.plot(pos=(t,earth.velocity.x))
+        elif i==23:
+            mars3=marsvelocity.plot(pos=(t,mars.velocity.x))
+        elif i==24:
+            jupiter3=jupitervelocity.plot(pos=(t,jupiter.velocity.x))
+        elif i==25:
+            saturn3=saturnvelocity.plot(pos=(t,saturn.velocity.x))
+        elif i==26:
+            uranus3=uranusvelocity.plot(pos=(t,uranus.velocity.x))
+        elif i==27:
+            neptune3=neptunevelocity.plot(pos=(t,neptune.velocity.x))
+            
+            
+
+    
